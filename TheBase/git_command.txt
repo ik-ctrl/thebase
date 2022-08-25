@@ -1,0 +1,7 @@
+﻿git init                                -  инициализация репозитория
+git add <file>/.                        - добавления файла в коммит/ всех файлов в коммит
+git rm --cached -r .                    - очистка рекурсивно стаджа от всех файлов
+git status                              - проверка статуса гита: изменения , текущую ветку , стайдж
+git checkout -b branch_name             - создание или переход на ветку
+git commit -m "message"                 - коммит
+git push --set-upstream origin master   - пуш в удаленный репозиторий
