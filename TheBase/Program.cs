@@ -1,4 +1,5 @@
 ﻿using System;
+using TheBase.Models.BinaryTree;
 
 namespace TheBase
 {
@@ -7,6 +8,9 @@ namespace TheBase
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+
+            var tree = new BiTree<int>();
+
         }
     }
 }

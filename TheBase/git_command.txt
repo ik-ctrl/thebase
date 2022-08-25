@@ -5,3 +5,4 @@ git status                              - проверка статуса гит
 git checkout -b branch_name             - создание или переход на ветку
 git commit -m "message"                 - коммит
 git push --set-upstream origin master   - пуш в удаленный репозиторий
+git branch                              - просмотр всех созданных веток
