@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 
 namespace TheBase.Models.BinaryTree.Handlers
 {
@@ -31,6 +32,7 @@ namespace TheBase.Models.BinaryTree.Handlers
                 IdentConsoleWrite("Проверка корневого узла на null:");
                 IdentConsoleWrite($"Вставка корневого узла [{node.Key}:{node.Value}]", 2);
                 _root = node;
+                _root.ParentNode = null; 
                 _treeSize++;
                 return;
             }
@@ -49,6 +51,7 @@ namespace TheBase.Models.BinaryTree.Handlers
                         IdentConsoleWrite("Левая нода пуста", 3);
                         IdentConsoleWrite($"Производится вставка в левой узел [{node.Key}:{node.Value}]", 3);
                         curNode.LeftNode = node;
+                        curNode.LeftNode.ParentNode = curNode;
                         _treeSize++;
                         return;
                     }
@@ -65,6 +68,7 @@ namespace TheBase.Models.BinaryTree.Handlers
                         IdentConsoleWrite("Правая нода пуста", 3);
                         IdentConsoleWrite($"Производится вставка в правый узел [{node.Key}:{node.Value}]", 3);
                         curNode.RightNode = node;
+                        curNode.RightNode.ParentNode = curNode;
                         _treeSize++;
                         return;
                     }
@@ -151,6 +155,99 @@ namespace TheBase.Models.BinaryTree.Handlers
                     return null;
             }
         }
+        #endregion
+        
+        #region delete_node
+        
+        public void DeleteNode(T key)
+        {
+            IdentConsoleWrite("Поиск удаляемой ноды по ключу");
+            var deletedNode = FindNode(key);
+            if (deletedNode == null)
+            {
+                IdentConsoleWrite("Нода не найдена. Удаление отменено");
+                return;
+            }
+            IdentConsoleWrite("Нода обнаружена. Удаление отменено");
+            Delete(deletedNode);
+        }
+
+        private void Delete(BiTreeNode<T,K> node)
+        {
+            var parent = node.ParentNode;
+            IdentConsoleWrite($"Родительская нода [{parent.Key}:{parent.Value}]",2);
+            if (parent.ParentNode == null)
+            {
+                IdentConsoleWrite($"Удаление рут ноды ",3);
+                if (parent.LeftNode == null && parent.RightNode == null)
+                {
+                    IdentConsoleWrite($"Отсутствуют дочерние узлы ",4);
+                    IdentConsoleWrite($"Удаление рутовой ноды. ",4);
+                    _root = null;
+                    return;
+                }
+
+                if (parent.LeftNode == null)
+                {
+                    IdentConsoleWrite($"Отсутствует левая нода ",4);
+                    _root.RightNode.ParentNode = null;
+                    _root = _root.RightNode;
+                    IdentConsoleWrite($"Замена рутовой ноды правой нодой [{_root.Key}:{_root.Value}]. ",4);
+                    return;
+                }
+
+                if (parent.RightNode == null)
+                {
+                    IdentConsoleWrite($"Отсутствует правая нода ",4);
+                    _root.LeftNode.ParentNode = null;
+                    _root = _root.LeftNode;
+                    IdentConsoleWrite($"Замена рутовой ноды левой нодой [{_root.Key}:{_root.Value}]. ",4);
+                    return;
+                }
+                
+                IdentConsoleWrite($"Имеются две дочерних ноды. ",4);
+                _root.RightNode.ParentNode = null;
+                var tmpLNode = _root.LeftNode;
+                var tmpRNode = _root.RightNode;
+                _root.RightNode.ParentNode = null;
+                _root = tmpRNode;
+                IdentConsoleWrite($"Рут заменен правой нодой.[{_root.Key}:{_root.Value}]",4);
+                IdentConsoleWrite($"Перестроение дерева",4);
+                Add(tmpLNode);
+            }
+
+            var compResult = node.ParentNode.Key.CompareTo(node.Key);
+            if (node.LeftNode == null && node.RightNode == null)
+            {
+                if (compResult == -1)
+                {
+                    node.ParentNode.LeftNode = null;
+                    return;
+                }
+                else
+                {
+                    node.ParentNode.RightNode = null;
+                    return; 
+                }
+            }
+
+            if (node.LeftNode == null)
+            {
+                
+            }
+            
+            
+            
+            
+
+
+
+
+
+        }
+        
+
+
         #endregion
 
         private void IdentConsoleWrite(string message, int tabCount = 1)

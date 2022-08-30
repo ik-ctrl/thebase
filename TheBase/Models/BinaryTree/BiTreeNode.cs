@@ -20,6 +20,11 @@ namespace TheBase.Models.BinaryTree
         /// <summary>
         /// Левый узел
         /// </summary>
+        public BiTreeNode<T,K> ParentNode { get; set; }
+        
+        /// <summary>
+        /// Левый узел
+        /// </summary>
         public BiTreeNode<T,K> LeftNode { get; set; }
         
         /// <summary>

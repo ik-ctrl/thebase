@@ -6,5 +6,6 @@ namespace TheBase.Models.BinaryTree.Handlers
     {
         void AddNode(BiTreeNode<T,K> node);
         BiTreeNode<T, K> FindNode(T key);
+        void DeleteNode(T key);
     }
 }
