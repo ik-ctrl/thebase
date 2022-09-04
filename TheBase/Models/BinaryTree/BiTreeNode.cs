@@ -5,32 +5,27 @@ namespace TheBase.Models.BinaryTree
     /// <summary>
     /// Узел бинарного дерева
     /// </summary>
-    public class BiTreeNode <T,K> where T :IComparable<T>
+    public class BiTreeNode <T> where T :IComparable<T>
     {
         /// <summary>
         /// Данные узла
         /// </summary>
-        public  T Key { get; set; }
-        
+        public  T Value { get; set; }
+
         /// <summary>
-        /// Значение ноды
+        /// Левый узел
         /// </summary>
-        public K Value { get; set; }
+        public BiTreeNode<T> ParentNode { get; set; }
         
         /// <summary>
         /// Левый узел
         /// </summary>
-        public BiTreeNode<T,K> ParentNode { get; set; }
-        
-        /// <summary>
-        /// Левый узел
-        /// </summary>
-        public BiTreeNode<T,K> LeftNode { get; set; }
+        public BiTreeNode<T> LeftNode { get; set; }
         
         /// <summary>
         /// Правый узел
         /// </summary>
-        public BiTreeNode<T,K> RightNode { get; set; }
+        public BiTreeNode<T> RightNode { get; set; }
 
     }
 }

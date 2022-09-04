@@ -8,19 +8,27 @@ namespace TheBase
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-
-            var tree = new BiTree<int, string>(true);
-            tree.AddNode(10, "Привет");
-            tree.AddNode(11, "Мир");
-            tree.AddNode(6, "Как");
-            tree.AddNode(7, "дела");
-            tree.AddNode(13, "это");
-            tree.AddNode(12, "новый");
-            tree.AddNode(6, "тыц тыц");
-            var k = 100;
-
-            tree.FindNode(6);
-            k = 200;
+            var separator = new string('-', 20);
+            var tree = new BiTree<int>();
+            Console.WriteLine(separator);
+            tree.AddNode(10);
+            tree.DrawTree(WalkType.RightWalk);
+            Console.WriteLine(separator);
+            tree.AddNode(20);
+            tree.DrawTree(WalkType.RightWalk);
+            Console.WriteLine(separator);
+            tree.AddNode(30);
+            tree.DrawTree(WalkType.RightWalk);
+            Console.WriteLine(separator);
+            tree.AddNode(5);
+            tree.DrawTree(WalkType.RightWalk);
+            Console.WriteLine(separator);
+            tree.AddNode(4);
+            tree.DrawTree(WalkType.RightWalk);
+            Console.WriteLine(separator);
+            tree.AddNode(8);
+            tree.DrawTree(WalkType.RightWalk);
+            Console.WriteLine(separator);
         }
     }
 }
