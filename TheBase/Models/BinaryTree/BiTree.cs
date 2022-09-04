@@ -15,7 +15,7 @@ namespace TheBase.Models.BinaryTree
             var node = new BiTreeNode<T>() { Value = value };
             Add(node);
         }
-
+        public int TreeSize => _size;
 
         private void Add(BiTreeNode<T> newNode, BiTreeNode<T> currentNode = null)
         {
@@ -62,6 +62,9 @@ namespace TheBase.Models.BinaryTree
             }
         }
 
+
+        #region draw_tree
+
         public void DrawTree(WalkType walk = WalkType.LeftWalk)
         {
             if (_root == null)
@@ -78,25 +81,26 @@ namespace TheBase.Models.BinaryTree
         private void DrawLeftWalkType(BiTreeNode<T> node, int levelNode = 0)
         {
             var currentLevel = levelNode++;
-            if (node.LeftNode!=null)
-                DrawLeftWalkType(node.LeftNode,levelNode);
-            DrawTreeNode(node,currentLevel);
+            if (node.LeftNode != null)
+                DrawLeftWalkType(node.LeftNode, levelNode);
+            DrawTreeNode(node, currentLevel);
             if (node.RightNode != null)
-                DrawLeftWalkType(node.RightNode,levelNode);
+                DrawLeftWalkType(node.RightNode, levelNode);
         }
 
-        private void DrawRightWalkType(BiTreeNode<T> node,int levelNode = 0)
+        private void DrawRightWalkType(BiTreeNode<T> node, int levelNode = 0)
         {
             var currentLevel = levelNode++;
-            if (node.RightNode!=null)
-                DrawRightWalkType(node.RightNode,levelNode);
-            DrawTreeNode(node,currentLevel);
-            if(node.LeftNode !=null)
-                DrawRightWalkType(node.LeftNode,levelNode);
-  
+            if (node.RightNode != null)
+                DrawRightWalkType(node.RightNode, levelNode);
+            DrawTreeNode(node, currentLevel);
+            if (node.LeftNode != null)
+                DrawRightWalkType(node.LeftNode, levelNode);
         }
 
         private void DrawTreeNode(BiTreeNode<T> node, int levelNode)
             => Console.WriteLine($"{new string('\t', levelNode)}[{node.Value}]");
+
+        #endregion
     }
 }
