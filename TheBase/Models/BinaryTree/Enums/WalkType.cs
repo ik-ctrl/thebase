@@ -1,4 +1,4 @@
-﻿namespace TheBase.Models.BinaryTree
+﻿namespace TheBase.Models.BinaryTree.Enums
 {
     public enum WalkType
     {

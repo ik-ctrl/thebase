@@ -1,5 +1,6 @@
 ﻿using System;
 using TheBase.Models.BinaryTree;
+using TheBase.Models.BinaryTree.Enums;
 
 namespace TheBase
 {
@@ -29,6 +30,18 @@ namespace TheBase
             tree.AddNode(8);
             tree.DrawTree(WalkType.RightWalk);
             Console.WriteLine(separator);
+
+            var node = tree.FindNode(8);
+            Console.WriteLine($"[{node}]");
+           
+            Console.WriteLine(separator);
+            
+            tree.DrawTree();
+            tree.DeleteNode(5);
+            tree.DrawTree();
+            // Console.WriteLine(separator);
+            //
+            
         }
     }
 }
