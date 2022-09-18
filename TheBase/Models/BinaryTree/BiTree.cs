@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Security;
+using Microsoft.VisualBasic.FileIO;
 using TheBase.Models.BinaryTree.Enums;
 
 namespace TheBase.Models.BinaryTree
@@ -11,25 +15,26 @@ namespace TheBase.Models.BinaryTree
         private BiTreeNode<T> _root;
         private int _size;
 
+        public int TreeSize => _size;
+
         public void AddNode(T value)
         {
             var node = new BiTreeNode<T>() { Value = value };
             Add(node);
         }
 
-        public int TreeSize => _size;
-        
         public void DeleteNode(T value)
         {
             var deletedNode = new BiTreeNode<T>() { Value = value };
             Delete(deletedNode);
         }
-        
+
         private void Add(BiTreeNode<T> newNode, BiTreeNode<T> currentNode = null)
         {
             if (_root == null)
             {
                 _root = newNode;
+                _root.Position = Position.Root;
                 return;
             }
 
@@ -41,7 +46,7 @@ namespace TheBase.Models.BinaryTree
                 {
                     if (curNode.LeftNode == null)
                     {
-                        newNode.Side = NodeSide.LeftSide;
+                        newNode.Position = Position.LeftSide;
                         curNode.LeftNode = newNode;
                         curNode.LeftNode.ParentNode = curNode;
                         _size++;
@@ -55,12 +60,13 @@ namespace TheBase.Models.BinaryTree
                 {
                     if (curNode.RightNode == null)
                     {
-                        newNode.Side = NodeSide.RightSide;
+                        newNode.Position = Position.RightSide;
                         curNode.RightNode = newNode;
                         curNode.RightNode.ParentNode = curNode;
                         _size++;
                         return;
                     }
+
                     Add(newNode, curNode.RightNode);
                     break;
                 }
@@ -86,41 +92,108 @@ namespace TheBase.Models.BinaryTree
                 return;
             }
 
-            var maxNode = FindMax(searchedNode.LeftNode);
-            if (maxNode.LeftNode != null)
+            if (searchedNode.LeftNode == null && searchedNode.RightNode == null)
             {
-                maxNode.ParentNode.RightNode = maxNode.LeftNode;
-                maxNode.LeftNode = null;
+                DeleteLeafNode(searchedNode);
+                return;
             }
 
-            maxNode.ParentNode = searchedNode.ParentNode;
-            if (searchedNode.Side == NodeSide.LeftSide)
+            var maxNode = SearchMaxNode(searchedNode);
+
+            switch (searchedNode.Position)
             {
-                searchedNode.ParentNode.LeftNode = maxNode;
-                maxNode.Side = NodeSide.LeftSide;
-                maxNode.LeftNode = searchedNode.LeftNode;
-                maxNode.RightNode = searchedNode.RightNode;
-                maxNode.LeftNode.ParentNode = maxNode;
-                maxNode.RightNode.ParentNode = maxNode;
+                case Position.LeftSide:
+                {
+                    maxNode.ParentNode = searchedNode.ParentNode;
+                    maxNode.Position = Position.LeftSide;
+                    if (maxNode.Value.CompareTo(searchedNode.LeftNode.Value) != 0)
+                        maxNode.LeftNode = searchedNode.LeftNode;
+                    maxNode.RightNode = searchedNode.RightNode;
+                    if (maxNode.LeftNode != null)
+                        maxNode.LeftNode.ParentNode = maxNode;
+                    if (maxNode.RightNode != null)
+                        maxNode.RightNode.ParentNode = maxNode;
+                    maxNode.ParentNode.LeftNode = maxNode;
+                    break;
+                }
+                case Position.RightSide:
+                {
+                    maxNode.ParentNode = searchedNode.ParentNode;
+                    maxNode.Position = Position.RightSide;
+                    // maxNode.RightNode = searchedNode.RightNode;
+                    if (maxNode.Value.CompareTo(searchedNode.RightNode.Value) != 0)
+                        maxNode.RightNode = searchedNode.RightNode;
+                    if (maxNode.LeftNode != null)
+                        maxNode.LeftNode.ParentNode = maxNode;
+                    if (maxNode.RightNode != null)
+                        maxNode.RightNode.ParentNode = maxNode;
+                    maxNode.ParentNode.RightNode = maxNode;
+                    break;
+                }
+                default:
+                {
+                    maxNode.Position = Position.Root;
+                    if (maxNode.Value.CompareTo(searchedNode.LeftNode.Value) != 0)
+                        maxNode.LeftNode = searchedNode.LeftNode;
+                    maxNode.RightNode = searchedNode.RightNode;
+                    if (maxNode.LeftNode != null)
+                        maxNode.LeftNode.ParentNode = maxNode;
+                    if (maxNode.RightNode != null)
+                        maxNode.RightNode.ParentNode = maxNode;
+                    if (maxNode.Position == Position.LeftSide)
+                        maxNode.ParentNode.LeftNode = null;
+                    else
+                        maxNode.ParentNode.RightNode = null;
+                    maxNode.ParentNode = null;
+                    _root = maxNode;
+                    break;
+                }
             }
-            else
-            {
-                searchedNode.ParentNode.RightNode = maxNode;
-                maxNode.Side = NodeSide.RightSide;
-                maxNode.LeftNode = searchedNode.LeftNode;
-                maxNode.RightNode = searchedNode.RightNode;
-                maxNode.LeftNode.ParentNode = maxNode;
-                maxNode.RightNode.ParentNode = maxNode;
-            }
+
             _size--;
-            searchedNode = null;
         }
 
-        private BiTreeNode<T> FindMax(BiTreeNode<T> currentNode)
-            => currentNode.RightNode != null ? FindMax(currentNode.RightNode) : currentNode;
+        private BiTreeNode<T> SearchMaxNode(BiTreeNode<T> searchedNode)
+        {
+            var maxNode = new BiTreeNode<T>();
+            if (searchedNode.LeftNode != null && searchedNode.RightNode != null)
+                maxNode = FindMax(searchedNode.LeftNode);
+            if (searchedNode.LeftNode == null)
+                maxNode = searchedNode.RightNode;
+            if (searchedNode.RightNode == null)
+                maxNode = searchedNode.LeftNode;
+            return maxNode;
+        }
 
-        public BiTreeNode<T> FindNode(T value) => Find(new BiTreeNode<T>(){Value = value});
-        
+        private void DeleteLeafNode(BiTreeNode<T> searchedNode)
+        {
+            switch (@searchedNode.Position)
+            {
+                case Position.LeftSide:
+                {
+                    searchedNode.ParentNode.LeftNode = null;
+                    return;
+                }
+                case Position.RightSide:
+                {
+                    searchedNode.ParentNode.RightNode = null;
+                    return;
+                }
+                case Position.Root:
+                {
+                    _root = null;
+                    return;
+                }
+                default:
+                {
+                    Console.WriteLine("kak tak?!");
+                    return;
+                }
+            }
+        }
+
+        public BiTreeNode<T> FindNode(T value) => Find(new BiTreeNode<T>() { Value = value });
+
         private BiTreeNode<T> Find(BiTreeNode<T> searchedNode, BiTreeNode<T> currentNode = null)
         {
             if (_root == null)
@@ -140,13 +213,17 @@ namespace TheBase.Models.BinaryTree
             };
         }
 
+        private BiTreeNode<T> FindMax(BiTreeNode<T> currentNode)
+            => currentNode.RightNode == null ? currentNode : FindMax(currentNode.RightNode);
+
         #region draw_tree
 
-        public void DrawTree(WalkType walk = WalkType.LeftWalk)
+        public void DrawTree(WalkType walk = WalkType.RightWalk)
         {
             if (_root == null)
             {
                 Console.WriteLine("Отсутствует корень. Рисовка отменена");
+                return;
             }
 
             if (walk == WalkType.LeftWalk)

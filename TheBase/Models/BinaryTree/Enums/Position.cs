@@ -1,8 +1,9 @@
 ﻿namespace TheBase.Models.BinaryTree.Enums
 {
-    public enum NodeSide
+    public enum Position
     {
         LeftSide,
-        RightSide
+        RightSide,
+        Root,
     }
 }

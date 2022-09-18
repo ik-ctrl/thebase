@@ -30,18 +30,39 @@ namespace TheBase
             tree.AddNode(8);
             tree.DrawTree(WalkType.RightWalk);
             Console.WriteLine(separator);
-
+            
             var node = tree.FindNode(8);
             Console.WriteLine($"[{node}]");
-           
+            
+            Console.WriteLine(separator);
+            tree.DrawTree(); 
+            Console.WriteLine(separator);
+            tree.DeleteNode(5);
+            
+            Console.WriteLine(separator);
+            tree.DrawTree();
             Console.WriteLine(separator);
             
-            tree.DrawTree();
-            tree.DeleteNode(5);
-            tree.DrawTree();
+            tree.DeleteNode(20);
+            
+            Console.WriteLine(separator);
+            tree.DrawTree(); 
+            Console.WriteLine(separator);
+            
+            tree.DeleteNode(10);
+            
+            Console.WriteLine(separator);
+            tree.DrawTree(); 
+            Console.WriteLine(separator);
+            
+            
             // Console.WriteLine(separator);
             //
-            
+            // var tree = new BiTree<int>();
+            // tree.AddNode(10);
+            // tree.DrawTree();
+            // tree.DeleteNode(10);
+            // tree.DrawTree();
         }
     }
 }

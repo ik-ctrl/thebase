@@ -13,7 +13,7 @@ namespace TheBase.Models.BinaryTree
         
         public BiTreeNode<T> RightNode { get; set; }
         
-        public NodeSide Side { get; set; }
+        public Position Position { get; set; }
 
         public override string ToString() 
             => Value.ToString();
